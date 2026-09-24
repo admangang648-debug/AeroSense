@@ -396,27 +396,27 @@
     <button class="nl" id="nav-settings" onclick="showView('settings')">Settings</button>
   </nav>
   <div class="tbr">
-    <span id="dmpill" class="pill {% if is_live %}pill-live{% else %}pill-demo{% endif %}">● {% if is_live %}LIVE DATA{% else %}DEMO DATA{% endif %}</span>
+    <span id="dmpill" class="pill null</span>
     <span class="pill pill-on">● Online</span>
     <div style="position:relative">
       <button class="nb" id="nb" onclick="toggleNotif()" title="Notifications">🔔<span class="nbadge" id="nbcnt">3</span></button>
       <div class="ndd" id="ndd">
         <div class="ndh"><span>Notifications</span><span style="font-size:12px;color:var(--text-muted);font-weight:500;cursor:pointer" onclick="clearNotif()">Clear all</span></div>
-        <div class="ndi" onclick="showView('forecast');closeNotif()"><div class="ndit">24-Hour Forecast Ready</div><div class="ndtx">AI forecast for <span id="ncity">{{ current_location.city }}</span> is available.</div><div class="ndtm">Just now</div></div>
-        <div class="ndi" onclick="showView('alerts');closeNotif()"><div class="ndit">Risk: {{ current_alert.risk_category | upper }}</div><div class="ndtx">Air quality classified as {{ current_alert.risk_category }}.</div><div class="ndtm">Updated with forecast</div></div>
-        <div class="ndi" onclick="showView('reports');closeNotif()"><div class="ndit">Report Available</div><div class="ndtx">Environmental Intelligence Report ready for {{ current_location.city }}.</div><div class="ndtm">On demand</div></div>
+        <div class="ndi" onclick="showView('forecast');closeNotif()"><div class="ndit">24-Hour Forecast Ready</div><div class="ndtx">AI forecast for <span id="ncity">null</span> is available.</div><div class="ndtm">Just now</div></div>
+        <div class="ndi" onclick="showView('alerts');closeNotif()"><div class="ndit">Risk: null.</div><div class="ndtm">Updated with forecast</div></div>
+        <div class="ndi" onclick="showView('reports');closeNotif()"><div class="ndit">Report Available</div><div class="ndtx">Environmental Intelligence Report ready for null.</div><div class="ndtm">On demand</div></div>
       </div>
     </div>
     <div class="user-menu-wrap" id="userMenuWrap">
       <button class="profbtn" id="userMenuBtn" onclick="toggleUserMenu()" aria-haspopup="true" aria-expanded="false" title="User Menu">
-        <div class="profav" id="headerUserAv">{% if user_profile and user_profile.display_name %}{{ user_profile.display_name[0] | upper }}{% else %}U{% endif %}</div>
-        <span id="headerUserName">{{ user_profile.display_name if (user_profile and user_profile.display_name) else 'User' }}</span>
+        <div class="profav" id="headerUserAv">null</div>
+        <span id="headerUserName">null</span>
         <span class="ucaret" id="uCaret" style="color:var(--text-muted);font-size:10px;transition:transform .2s">▾</span>
       </button>
       <div class="user-dropdown" id="userDropdown" role="menu">
         <div class="udd-head">
-          <div class="udd-name" id="uddUserName">{{ user_profile.display_name if (user_profile and user_profile.display_name) else 'Demo User' }}</div>
-          <div class="udd-role" id="uddUserRole">{{ user_profile.role if (user_profile and user_profile.role) else 'Admin' }} · AeroSense HQ</div>
+          <div class="udd-name" id="uddUserName">null</div>
+          <div class="udd-role" id="uddUserRole">null · AeroSense HQ</div>
         </div>
         <div class="udd-item" role="menuitem" onclick="openProfileModal();closeUserMenu()">
           <span class="udd-ico">👤</span><span>Profile</span>
@@ -445,8 +445,8 @@
 <div class="locbar">
   <div class="locleft">
     <span class="loclbl">📍 Monitoring</span>
-    <span class="locname" id="dloc">{{ current_location.display_name if current_location.display_name else current_location.city }}</span>
-    <span class="loccoords" id="dcoords">{{ current_location.coordinates_display if current_location.coordinates_display else "12.9716° N, 77.5946° E" }}</span>
+    <span class="locname" id="dloc">null</span>
+    <span class="loccoords" id="dcoords">null</span>
     <span class="chip cl" style="font-size:10.5px">● Active Session</span>
   </div>
   <div style="display:flex;gap:8px">
@@ -466,8 +466,8 @@
       <div class="hd">AI-powered 24-hour air quality forecasting and proactive environmental intelligence.</div>
     </div>
     <div class="hm">
-      <div class="hmb">📍 City: <strong id="hcity">{{ current_location.city }}</strong></div>
-      <div class="hmb">🕒 Updated: <strong id="hts">{{ latest_timestamp }}</strong></div>
+      <div class="hmb">📍 City: <strong id="hcity">null</strong></div>
+      <div class="hmb">🕒 Updated: <strong id="hts">null</strong></div>
       <div class="hmb">⏱ Horizon: <strong>24 Hours</strong></div>
       <div class="hmb">🤖 Model: <strong>Random Forest</strong></div>
     </div>
@@ -476,11 +476,11 @@
   <!-- Metrics -->
   <div class="sh">Air Quality Overview <span class="shb">Current Observations</span></div>
   <div class="mg">
-    <div class="mt"><div class="ml">PM2.5 (Fine Particles)<div class="mi">PM</div></div><div class="mv" id="v25">{{ current_pm25 }}<span class="mu">µg/m³</span></div><span id="c25" class="chip {% if current_pm25<=30 %}cl{% elif current_pm25<=60 %}cm{% elif current_pm25<=90 %}ch2{% else %}cv{% endif %}">● {% if current_pm25<=30 %}LOW{% elif current_pm25<=60 %}MODERATE{% elif current_pm25<=90 %}HIGH{% else %}VERY HIGH{% endif %}</span></div>
-    <div class="mt"><div class="ml">PM10 (Coarse Particles)<div class="mi">PM</div></div><div class="mv" id="v10">{{ current_pm10 }}<span class="mu">µg/m³</span></div><span id="c10" class="chip {% if current_pm10<=50 %}cl{% elif current_pm10<=100 %}cm{% elif current_pm10<=250 %}ch2{% else %}cv{% endif %}">● {% if current_pm10<=50 %}LOW{% elif current_pm10<=100 %}MODERATE{% elif current_pm10<=250 %}HIGH{% else %}VERY HIGH{% endif %}</span></div>
-    <div class="mt"><div class="ml">Temperature<div class="mi">°C</div></div><div class="mv" id="vt">{{ current_temp }}<span class="mu">°C</span></div><span class="chip cn">Ambient</span></div>
-    <div class="mt"><div class="ml">Rel. Humidity<div class="mi">%</div></div><div class="mv" id="vh">{{ current_humidity }}<span class="mu">%</span></div><span class="chip cn">Atmospheric</span></div>
-    <div class="mt"><div class="ml">Wind Speed<div class="mi">↗</div></div><div class="mv" id="vw">{{ current_wind }}<span class="mu">km/h</span></div><span class="chip cn">Surface Wind</span></div>
+    <div class="mt"><div class="ml">PM2.5 (Fine Particles)<div class="mi">PM</div></div><div class="mv" id="v25">null<span class="mu">µg/m³</span></div><span id="c25" class="chip null</span></div>
+    <div class="mt"><div class="ml">PM10 (Coarse Particles)<div class="mi">PM</div></div><div class="mv" id="v10">null<span class="mu">µg/m³</span></div><span id="c10" class="chip null</span></div>
+    <div class="mt"><div class="ml">Temperature<div class="mi">°C</div></div><div class="mv" id="vt">null<span class="mu">°C</span></div><span class="chip cn">Ambient</span></div>
+    <div class="mt"><div class="ml">Rel. Humidity<div class="mi">%</div></div><div class="mv" id="vh">null<span class="mu">%</span></div><span class="chip cn">Atmospheric</span></div>
+    <div class="mt"><div class="ml">Wind Speed<div class="mi">↗</div></div><div class="mv" id="vw">null<span class="mu">km/h</span></div><span class="chip cn">Surface Wind</span></div>
   </div>
 
   <!-- Forecast + Risk -->
@@ -488,21 +488,21 @@
   <div class="fl">
     <div class="card cp">
       <div class="ch">
-        <div><div class="ct">Pollution Forecast — <span id="cclbl">{{ current_location.city }}</span></div><div class="cs">AI-predicted PM2.5 and PM10 for next 24 hours</div></div>
+        <div><div class="ct">Pollution Forecast — <span id="cclbl">null</span></div><div class="cs">AI-predicted PM2.5 and PM10 for next 24 hours</div></div>
         <div class="tg"><button class="tb2 active" id="tab-combined" onclick="setChart('combined')">Multi-Pollutant</button><button class="tb2" id="tab-pm25" onclick="setChart('pm25')">PM2.5</button><button class="tb2" id="tab-pm10" onclick="setChart('pm10')">PM10</button></div>
       </div>
       <div id="chm" class="pla"></div>
     </div>
     <div class="card cp">
       <div class="ch"><div><div class="ct">Risk Intelligence</div><div class="cs">Forecasted risk state</div></div></div>
-      <div id="riskbox" class="rb {{ 'very-high' if current_alert.risk_category=='Very High' else current_alert.risk_category|lower }}">
-        <div class="rw" id="rw">{{ current_alert.risk_category|upper }}</div>
-        <div class="rm" id="rm">{{ current_alert.public_health_message }}</div>
+      <div id="riskbox" class="rb null">
+        <div class="rw" id="rw">null</div>
+        <div class="rm" id="rm">null</div>
       </div>
-      <div class="sr"><span class="sl">Peak Time</span><span class="sv" id="spkt">{{ forecast_summary.peak_pollution_event.timestamp if forecast_summary.peak_pollution_event.timestamp else "N/A" }}</span></div>
-      <div class="sr"><span class="sl">Peak PM2.5</span><span class="sv" id="sp25" style="color:#0284C7">{{ forecast_summary.peak_pollution_event['peak_PM2.5'] }} µg/m³</span></div>
-      <div class="sr"><span class="sl">Peak PM10</span><span class="sv" id="sp10" style="color:#7C3AED">{{ forecast_summary.peak_pollution_event['peak_PM10'] }} µg/m³</span></div>
-      <div class="sr"><span class="sl">Elevated Hours</span><span class="sv" id="seh" style="color:var(--mod)">{{ elevated_hours_count }} hrs</span></div>
+      <div class="sr"><span class="sl">Peak Time</span><span class="sv" id="spkt">null</span></div>
+      <div class="sr"><span class="sl">Peak PM2.5</span><span class="sv" id="sp25" style="color:#0284C7">null µg/m³</span></div>
+      <div class="sr"><span class="sl">Peak PM10</span><span class="sv" id="sp10" style="color:#7C3AED">null µg/m³</span></div>
+      <div class="sr"><span class="sl">Elevated Hours</span><span class="sv" id="seh" style="color:var(--mod)">null hrs</span></div>
       <div class="sr"><span class="sl">Horizon</span><span class="sv">24 Hours</span></div>
       <div class="nb2">AeroSense detects predicted pollution increase periods to enable preventive action.</div>
     </div>
@@ -516,18 +516,18 @@
   <div class="sh" id="alerts">Public Health & Industrial Intelligence</div>
   <div class="ag">
     <div class="card cp">
-      <div class="ch"><div><div class="ct">Public Health Advisory</div><div class="cs">Citizen protection guidance</div></div><span id="cadv" class="chip {% if current_alert.risk_category=='Low' %}cl{% elif current_alert.risk_category=='Moderate' %}cm{% elif current_alert.risk_category=='High' %}ch2{% else %}cv{% endif %}">Level: {{ current_alert.risk_category|upper }}</span></div>
-      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px" id="advdesc">{{ current_alert.description }}</div>
+      <div class="ch"><div><div class="ct">Public Health Advisory</div><div class="cs">Citizen protection guidance</div></div><span id="cadv" class="chip null">Level: null</span></div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px" id="advdesc">null</div>
       <div style="font-size:13px;font-weight:600;color:var(--text-title);margin-bottom:8px">Recommended Actions:</div>
-      <div class="checklist" id="publ">{% for a in current_alert.recommended_public_actions %}<div class="ci"><span class="cn2">{{ "%02d"|format(loop.index) }}</span><span>{{ a }}</span></div>{% endfor %}</div>
+      <div class="checklist" id="publ">null</div>
       <div class="nb2">AI-generated advisory. Not a substitute for official public-health guidance.</div>
     </div>
     <div class="card cp">
       <div class="ch"><div><div class="ct">Industrial Emission Intelligence</div><div class="cs">Preventive operational recommendations</div></div></div>
-      <div class="sr"><span class="sl">Predicted Peak</span><span class="sv" id="ipkt">{{ forecast_summary.peak_pollution_event.timestamp if forecast_summary.peak_pollution_event.timestamp else "N/A" }}</span></div>
-      <div class="sr"><span class="sl">Peak Risk</span><span class="sv" id="ipkr">{{ forecast_summary.peak_pollution_event.peak_risk_level if forecast_summary.peak_pollution_event.peak_risk_level else "N/A" }}</span></div>
+      <div class="sr"><span class="sl">Predicted Peak</span><span class="sv" id="ipkt">null</span></div>
+      <div class="sr"><span class="sl">Peak Risk</span><span class="sv" id="ipkr">null</span></div>
       <div style="font-size:13px;font-weight:600;color:var(--text-title);margin:12px 0 8px">AI-Generated Recommendations:</div>
-      <div class="checklist" id="indl">{% for a in forecast_summary.key_industrial_actions %}<div class="ci"><span class="cn2">{{ "%02d"|format(loop.index) }}</span><span>{{ a }}</span></div>{% endfor %}</div>
+      <div class="checklist" id="indl">null</div>
       <div class="nb2"><strong>AI-Generated:</strong> Recommendations for voluntary operational consideration. Not official regulatory orders.</div>
     </div>
   </div>
@@ -544,10 +544,10 @@
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span></div>
       </div>
       <div class="srg">
-        <div class="sri"><div class="srl">Current Predicted PM2.5</div><div class="srv" id="sc1">{{ current_pm25 }} <span style="font-size:13px;color:var(--text-muted)">µg/m³</span></div></div>
-        <div class="sri"><div class="srl">Estimated Under Scenario</div><div class="srv" id="sc2" style="color:var(--low)">{{ current_pm25 }} <span style="font-size:13px;color:var(--text-muted)">µg/m³</span></div></div>
+        <div class="sri"><div class="srl">Current Predicted PM2.5</div><div class="srv" id="sc1">null <span style="font-size:13px;color:var(--text-muted)">µg/m³</span></div></div>
+        <div class="sri"><div class="srl">Estimated Under Scenario</div><div class="srv" id="sc2" style="color:var(--low)">null <span style="font-size:13px;color:var(--text-muted)">µg/m³</span></div></div>
         <div class="sri"><div class="srl">Estimated Change</div><div class="srv" id="sc3" style="color:var(--low)">0.0 µg/m³</div></div>
-        <div class="sri"><div class="srl">Est. High-Risk Hours</div><div class="srv" id="sc4">{{ elevated_hours_count }} hrs</div></div>
+        <div class="sri"><div class="srl">Est. High-Risk Hours</div><div class="srv" id="sc4">null hrs</div></div>
       </div>
       <div class="nb2" style="margin-top:14px">⚠ <strong>MODELLED SCENARIO:</strong> Simplified linear estimate. Real outcomes depend on complex atmospheric factors. Not guaranteed.</div>
     </div>
@@ -555,7 +555,7 @@
       <div class="ch"><div><div class="ct">Why is Pollution Changing?</div><div class="cs">Contributing factor analysis</div></div></div>
       <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Based on current observations and model inputs:</p>
       <div class="flist" id="aifac"></div>
-      <div class="sr" style="margin-top:12px"><span class="sl">Expected Peak</span><span class="sv" id="aipkt">{{ forecast_summary.peak_pollution_event.timestamp if forecast_summary.peak_pollution_event.timestamp else "N/A" }}</span></div>
+      <div class="sr" style="margin-top:12px"><span class="sl">Expected Peak</span><span class="sv" id="aipkt">null</span></div>
       <div class="nb2" style="margin-top:10px">Observational correlations. AeroSense does not claim direct causation without validated sensor-to-source attribution.</div>
     </div>
   </div>
@@ -568,8 +568,8 @@
       <table class="dt" style="font-size:13px">
         <thead><tr><th>Target</th><th>MAE (µg/m³)</th><th>RMSE (µg/m³)</th><th>R²</th></tr></thead>
         <tbody>
-          <tr><td><strong>PM2.5</strong></td><td><strong>{{ metrics_data.metrics['PM2.5'].MAE }}</strong></td><td><strong>{{ metrics_data.metrics['PM2.5'].RMSE }}</strong></td><td><strong>{{ metrics_data.metrics['PM2.5'].R2 }}</strong></td></tr>
-          <tr><td><strong>PM10</strong></td><td><strong>{{ metrics_data.metrics['PM10'].MAE }}</strong></td><td><strong>{{ metrics_data.metrics['PM10'].RMSE }}</strong></td><td><strong>{{ metrics_data.metrics['PM10'].R2 }}</strong></td></tr>
+          <tr><td><strong>PM2.5</strong></td><td><strong>null</strong></td></tr>
+          <tr><td><strong>PM10</strong></td><td><strong>null</strong></td></tr>
           <tr><td><strong>Algorithm</strong></td><td colspan="3" style="color:var(--brand);font-weight:600">Random Forest Regressor (Multi-target)</td></tr>
         </tbody>
       </table>
@@ -577,8 +577,8 @@
     </div>
     <div class="card cp">
       <div class="ch"><div><div class="ct">Proactive Impact</div><div class="cs">Operational intelligence indicators</div></div></div>
-      <div class="sr"><span class="sl">Peak Exposure Hours Identified</span><span class="sv" id="iipkt">{{ forecast_summary.peak_pollution_event.timestamp if forecast_summary.peak_pollution_event.timestamp else "N/A" }}</span></div>
-      <div class="sr"><span class="sl">Elevated Risk Periods Detected</span><span class="sv" id="iielev" style="color:var(--mod)">{{ elevated_hours_count }} Hours</span></div>
+      <div class="sr"><span class="sl">Peak Exposure Hours Identified</span><span class="sv" id="iipkt">null</span></div>
+      <div class="sr"><span class="sl">Elevated Risk Periods Detected</span><span class="sv" id="iielev" style="color:var(--mod)">null Hours</span></div>
       <div class="sr"><span class="sl">Forecast Lead Time</span><span class="sv" style="color:var(--brand)">24 Hours</span></div>
       <div class="sr"><span class="sl">Exposure Reduction Estimate</span><span class="sv" style="font-style:italic;color:var(--text-muted);font-weight:400;font-size:12px">Requires intervention/outcome data</span></div>
       <div class="sr"><span class="sl">Live Sensor Telemetry</span><span class="sv" style="font-style:italic;color:var(--text-muted);font-weight:400;font-size:12px">Available after live monitoring integration</span></div>
@@ -591,9 +591,9 @@
     <div style="font-size:13.5px;font-weight:700;color:var(--text-title);margin-bottom:14px">AeroSense System</div>
     <div class="str"><span class="stl">Backend Server</span><span class="stv"><span class="dot dg"></span>Online</span></div>
     <div class="str"><span class="stl">Forecast Model</span><span class="stv"><span class="dot dg"></span>Available — Random Forest</span></div>
-    <div class="str"><span class="stl">Air Quality Data</span><span class="stv"><span class="dot do"></span><span id="dstxt">{% if is_live %}Connected (OpenAQ){% else %}Demo / Synthetic Dataset{% endif %}</span></span></div>
+    <div class="str"><span class="stl">Air Quality Data</span><span class="stv"><span class="dot do"></span><span id="dstxt">null</span></span></div>
     <div class="str"><span class="stl">Session Storage</span><span class="stv"><span class="dot dg"></span>Available</span></div>
-    <div class="str"><span class="stl">Live API (OpenAQ)</span><span class="stv"><span class="dot {% if is_live %}dg{% else %}do{% endif %}"></span>{% if is_live %}Connected{% else %}Unavailable — Demo mode active{% endif %}</span></div>
+    <div class="str"><span class="stl">Live API (OpenAQ)</span><span class="stv"><span class="dot null</span></div>
   </div>
 
   <!-- Pipeline -->
@@ -603,7 +603,7 @@
     <div class="pf">
       <div class="pn on">User Location</div><div class="pa">→</div>
       <div class="pn on">Lat / Lon</div><div class="pa">→</div>
-      <div class="pn {% if is_live %}on{% endif %}">OpenAQ API</div><div class="pa">→</div>
+      <div class="pn null">OpenAQ API</div><div class="pa">→</div>
       <div class="pn on">PM2.5 / PM10</div><div class="pa">→</div>
       <div class="pn on">ML Forecast</div><div class="pa">→</div>
       <div class="pn on">Risk Analysis</div><div class="pa">→</div>
@@ -619,7 +619,7 @@
 
 <!-- ======== VIEW: FORECAST ======== -->
 <div class="view" id="view-forecast">
-  <div class="sh" style="margin-top:8px">24-Hour Forecast Detail <span class="shb" id="fccitylbl">{{ current_location.city }}</span></div>
+  <div class="sh" style="margin-top:8px">24-Hour Forecast Detail <span class="shb" id="fccitylbl">null</span></div>
   <div class="card cp" style="margin-bottom:18px">
     <div class="ch"><div><div class="ct">PM2.5 Forecast</div><div class="cs">24-hour AI prediction</div></div><span class="chip ct2">FORECAST</span></div>
     <div id="chpm25big" style="min-height:380px;width:100%"></div>
@@ -634,18 +634,18 @@
       <table class="dt">
         <thead><tr><th>Horizon</th><th>Timestamp</th><th>PM2.5 (µg/m³)</th><th>PM10 (µg/m³)</th><th>Temp (°C)</th><th>Humidity (%)</th><th>Wind (km/h)</th><th>Risk</th></tr></thead>
         <tbody id="fctbl">
-          {% for item in forecast_records %}
+          null
           <tr>
-            <td><strong>+{{ item.forecast_hour }}h</strong></td>
-            <td>{{ item.timestamp }}</td>
-            <td style="font-weight:600;color:#0284C7">{{ item['predicted_PM2.5'] }}</td>
-            <td style="font-weight:600;color:#7C3AED">{{ item['predicted_PM10'] }}</td>
-            <td>{{ item.temperature }}°</td>
-            <td>{{ item.humidity }}%</td>
-            <td>{{ item.wind_speed }}</td>
-            <td><span class="chip {% if item.aqi_category=='Good' %}cl{% elif item.aqi_category=='Satisfactory / Moderate' %}cm{% elif 'Sensitive' in item.aqi_category %}ch2{% else %}cv{% endif %}">{{ item.aqi_category }}</span></td>
+            <td><strong>+nullh</strong></td>
+            <td>null</td>
+            <td style="font-weight:600;color:#0284C7">null</td>
+            <td style="font-weight:600;color:#7C3AED">null</td>
+            <td>null°</td>
+            <td>null%</td>
+            <td>null</td>
+            <td><span class="chip null">null</span></td>
           </tr>
-          {% endfor %}
+          null
         </tbody>
       </table>
     </div>
@@ -725,7 +725,7 @@
 
 <!-- ======== VIEW: ANALYTICS ======== -->
 <div class="view" id="view-analytics">
-  <div class="sh" style="margin-top:8px">Historical Analytics <span class="shb" id="anloc">{{ current_location.city }}</span></div>
+  <div class="sh" style="margin-top:8px">Historical Analytics <span class="shb" id="anloc">null</span></div>
   <div class="afb">
     <button class="fb active" id="f7d" onclick="loadAn('7d')">7 Days</button>
     <button class="fb" id="f30d" onclick="loadAn('30d')">30 Days</button>
@@ -754,7 +754,7 @@
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
       <div style="flex:1">
         <div class="ct" style="margin-bottom:4px">Generate AeroSense Environmental Intelligence Report</div>
-        <div class="cs">Automated report for <span id="rptloc2">{{ current_location.display_name if current_location.display_name else current_location.city }}</span></div>
+        <div class="cs">Automated report for <span id="rptloc2">null</span></div>
       </div>
       <button class="btn btn-dark" id="genReportBtn" onclick="genReport()">⚡ Generate Report</button>
       <button class="btn btn-outline" id="printReportBtn" onclick="printReport()">📄 Print / Save PDF</button>
@@ -773,38 +773,38 @@
       <div style="text-align:right">
         <div style="font-size:11.5px;color:var(--text-secondary)">Problem Statement: PS-1A</div>
         <div style="font-size:11.5px;color:var(--text-secondary)">Air Quality Forecasting & Public Health Alert</div>
-        <span class="chip {% if is_live %}cl{% else %}cn{% endif %}" id="rptmode" style="margin-top:8px;display:inline-flex">{% if is_live %}LIVE DATA{% else %}DEMO DATA{% endif %}</span>
+        <span class="chip null</span>
       </div>
     </div>
     <div class="rmg">
-      <div class="rmi"><div class="rml">Location</div><div class="rmv" id="rptloc">{{ current_location.display_name if current_location.display_name else current_location.city }}</div></div>
-      <div class="rmi"><div class="rml">Coordinates</div><div class="rmv" id="rptcoord">{{ current_location.coordinates_display if current_location.coordinates_display else "N/A" }}</div></div>
+      <div class="rmi"><div class="rml">Location</div><div class="rmv" id="rptloc">null</div></div>
+      <div class="rmi"><div class="rml">Coordinates</div><div class="rmv" id="rptcoord">null</div></div>
       <div class="rmi"><div class="rml">Generated</div><div class="rmv" id="rptts">—</div></div>
-      <div class="rmi"><div class="rml">Data Source</div><div class="rmv" id="rptsrc">{% if is_live %}OpenAQ (Live){% else %}Synthetic Demo{% endif %}</div></div>
+      <div class="rmi"><div class="rml">Data Source</div><div class="rmv" id="rptsrc">null</div></div>
       <div class="rmi"><div class="rml">Reporting Period</div><div class="rmv" id="rptperiod">Last 30 days</div></div>
       <div class="rmi"><div class="rml">Forecast Horizon</div><div class="rmv" id="rpthorizon">24 Hours</div></div>
     </div>
     <div class="sh" style="font-size:14px">Key Air Quality Statistics</div>
     <div class="rsg">
-      <div class="rst"><div class="rsv" id="rpt25">{{ current_pm25 }}</div><div class="rsl">Current PM2.5 (µg/m³)</div></div>
-      <div class="rst"><div class="rsv" id="rpt10">{{ current_pm10 }}</div><div class="rsl">Current PM10 (µg/m³)</div></div>
-      <div class="rst"><div class="rsv" id="rptpk25">{{ forecast_summary.peak_pollution_event['peak_PM2.5'] if forecast_summary and forecast_summary.peak_pollution_event else current_pm25 }}</div><div class="rsl">24h Forecast Peak PM2.5</div></div>
-      <div class="rst"><div class="rsv" id="rptelev">{{ elevated_hours_count }}</div><div class="rsl">Elevated Risk Hours (Forecast)</div></div>
+      <div class="rst"><div class="rsv" id="rpt25">null</div><div class="rsl">Current PM2.5 (µg/m³)</div></div>
+      <div class="rst"><div class="rsv" id="rpt10">null</div><div class="rsl">Current PM10 (µg/m³)</div></div>
+      <div class="rst"><div class="rsv" id="rptpk25">null</div><div class="rsl">24h Forecast Peak PM2.5</div></div>
+      <div class="rst"><div class="rsv" id="rptelev">null</div><div class="rsl">Elevated Risk Hours (Forecast)</div></div>
     </div>
     <div class="sh" style="font-size:14px">Model Performance</div>
     <table class="dt" style="margin-bottom:22px;font-size:13px">
       <thead><tr><th>Target Pollutant</th><th>MAE (µg/m³)</th><th>RMSE (µg/m³)</th><th>R² Score</th></tr></thead>
       <tbody>
-        <tr><td><strong>PM2.5</strong></td><td id="rptm25mae">{{ metrics_data.metrics['PM2.5'].MAE if metrics_data and metrics_data.metrics and metrics_data.metrics['PM2.5'] else '4.92' }}</td><td id="rptm25rmse">{{ metrics_data.metrics['PM2.5'].RMSE if metrics_data and metrics_data.metrics and metrics_data.metrics['PM2.5'] else '6.58' }}</td><td id="rptm25r2">{{ metrics_data.metrics['PM2.5'].R2 if metrics_data and metrics_data.metrics and metrics_data.metrics['PM2.5'] else '0.856' }}</td></tr>
-        <tr><td><strong>PM10</strong></td><td id="rptm10mae">{{ metrics_data.metrics['PM10'].MAE if metrics_data and metrics_data.metrics and metrics_data.metrics['PM10'] else '8.14' }}</td><td id="rptm10rmse">{{ metrics_data.metrics['PM10'].RMSE if metrics_data and metrics_data.metrics and metrics_data.metrics['PM10'] else '11.20' }}</td><td id="rptm10r2">{{ metrics_data.metrics['PM10'].R2 if metrics_data and metrics_data.metrics and metrics_data.metrics['PM10'] else '0.812' }}</td></tr>
+        <tr><td><strong>PM2.5</strong></td><td id="rptm25mae">null</td></tr>
+        <tr><td><strong>PM10</strong></td><td id="rptm10mae">null</td></tr>
       </tbody>
     </table>
     <div class="sh" style="font-size:14px">AI-Generated Proactive Recommendations</div>
     <div style="margin-bottom:12px;font-weight:600;font-size:13px;color:var(--text-title)">Public Health Action:</div>
-    <div class="checklist" id="rptpub" style="margin-bottom:18px">{% for a in current_alert.recommended_public_actions %}<div class="ci"><span class="cn2">{{ "%02d"|format(loop.index) }}</span><span>{{ a }}</span></div>{% endfor %}</div>
+    <div class="checklist" id="rptpub" style="margin-bottom:18px">null</div>
     <div style="margin-bottom:12px;font-weight:600;font-size:13px;color:var(--text-title)">Industrial & Facility Operational Mitigation:</div>
-    <div class="checklist" id="rptind">{% for a in forecast_summary.key_industrial_actions %}<div class="ci"><span class="cn2">{{ "%02d"|format(loop.index) }}</span><span>{{ a }}</span></div>{% endfor %}</div>
-    <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--border-light);font-size:11.5px;color:var(--text-muted);line-height:1.5" id="rptdisclaimer"><strong>DISCLAIMER:</strong> AI-generated environmental intelligence report. Not an official regulatory certificate. Data mode: {% if is_live %}LIVE DATA (OpenAQ){% else %}DEMO DATA (Synthetic Dataset){% endif %}.</div>
+    <div class="checklist" id="rptind">null</div>
+    <div style="margin-top:22px;padding-top:16px;border-top:1px solid var(--border-light);font-size:11.5px;color:var(--text-muted);line-height:1.5" id="rptdisclaimer"><strong>DISCLAIMER:</strong> AI-generated environmental intelligence report. Not an official regulatory certificate. Data mode: null.</div>
   </div>
 </div>
 
@@ -834,8 +834,6 @@
   </div>
   <div class="sh">Activity Log</div>
   <div class="card cp"><div class="tw"><table class="dt"><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody id="actlog"></tbody></table></div></div>
-</div>
-
 </div>
 
 <!-- ======== VIEW: SUBSCRIPTION ======== -->
@@ -913,15 +911,15 @@
         <div class="sst">Profile</div>
         <div id="profSaveMsg" style="display:none;padding:10px 14px;border-radius:var(--rs);margin-bottom:14px;font-size:12.5px;font-weight:600"></div>
         <form id="profileForm" onsubmit="saveProfileSettings(event)">
-          <div class="fg"><label class="flbl">Display Name</label><input class="fc" id="profDisplayNameInput" type="text" value="{{ user_profile.display_name if (user_profile and user_profile.display_name) else 'Demo User' }}" required></div>
-          <div class="fg"><label class="flbl">Email</label><input class="fc" id="profEmailInput" type="email" value="{{ user_profile.email if (user_profile and user_profile.email) else 'user@aerosense.ai' }}" required></div>
-          <div class="fg"><label class="flbl">Organization</label><input class="fc" id="profOrgInput" type="text" value="{{ user_profile.organization if (user_profile and user_profile.organization) else 'AeroSense Demo Organization' }}"></div>
+          <div class="fg"><label class="flbl">Display Name</label><input class="fc" id="profDisplayNameInput" type="text" value="null" required></div>
+          <div class="fg"><label class="flbl">Email</label><input class="fc" id="profEmailInput" type="email" value="null" required></div>
+          <div class="fg"><label class="flbl">Organization</label><input class="fc" id="profOrgInput" type="text" value="null"></div>
           <div class="fg"><label class="flbl">Role</label>
             <select class="fc" id="profRoleInput">
-              <option value="Admin" {% if user_profile and user_profile.role == 'Admin' %}selected{% endif %}>Admin</option>
-              <option value="Environmental Manager" {% if user_profile and user_profile.role == 'Environmental Manager' %}selected{% endif %}>Environmental Manager</option>
-              <option value="Operations Manager" {% if user_profile and user_profile.role == 'Operations Manager' %}selected{% endif %}>Operations Manager</option>
-              <option value="Viewer" {% if user_profile and user_profile.role == 'Viewer' %}selected{% endif %}>Viewer</option>
+              <option value="Admin" null>Admin</option>
+              <option value="Environmental Manager" null>Environmental Manager</option>
+              <option value="Operations Manager" null>Operations Manager</option>
+              <option value="Viewer" null>Viewer</option>
             </select>
           </div>
           <button type="submit" class="btn btn-dark" id="saveProfileBtn" style="margin-top:8px">Save Profile</button>
@@ -992,7 +990,7 @@
 <!-- FOOTER -->
 <footer>
   <div><span class="fbr">AeroSense</span> · <em>"Predict. Alert. Act."</em> · PS-1A | Climate & Environment</div>
-  <div>Model: <strong>Random Forest</strong> · Data: <strong>{% if is_live %}Live (OpenAQ){% else %}Synthetic Demo{% endif %}</strong> · v1.0.0-prototype</div>
+  <div>Model: <strong>Random Forest</strong> · Data: <strong>null</strong> · v1.0.0-prototype</div>
 </footer>
 
 </div><!-- end pc -->
@@ -1032,16 +1030,16 @@
       <button class="mc" onclick="closeProfileModal()">×</button>
     </div>
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--bg-subtle);border-radius:var(--rs);border:1px solid var(--border-light)">
-      <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#0284c7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700" id="profModalAv">{% if user_profile and user_profile.display_name %}{{ user_profile.display_name[0] | upper }}{% else %}U{% endif %}</div>
+      <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#0284c7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700" id="profModalAv">null</div>
       <div>
-        <div style="font-size:15px;font-weight:700;color:var(--text-title)" id="profModalName">{{ user_profile.display_name if (user_profile and user_profile.display_name) else 'Demo User' }}</div>
-        <div style="font-size:12px;color:var(--brand);font-weight:600;margin-top:2px" id="profModalRole">{{ user_profile.role if (user_profile and user_profile.role) else 'Admin' }}</div>
-        <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px" id="profModalEmail">{{ user_profile.email if (user_profile and user_profile.email) else 'user@aerosense.ai' }}</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text-title)" id="profModalName">null</div>
+        <div style="font-size:12px;color:var(--brand);font-weight:600;margin-top:2px" id="profModalRole">null</div>
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px" id="profModalEmail">null</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;font-size:12px">
-      <div class="sb"><div class="sn" style="font-size:11px;color:var(--text-muted)">Organization</div><div style="font-weight:600;color:var(--text-title);margin-top:3px" id="profModalOrg">{{ user_profile.organization if (user_profile and user_profile.organization) else 'AeroSense Demo Organization' }}</div></div>
-      <div class="sb"><div class="sn" style="font-size:11px;color:var(--text-muted)">Role Access</div><div style="font-weight:600;color:var(--text-title);margin-top:3px" id="profModalAccess">Full Platform (<span id="profModalRoleAccess">{{ user_profile.role if (user_profile and user_profile.role) else 'Admin' }}</span>)</div></div>
+      <div class="sb"><div class="sn" style="font-size:11px;color:var(--text-muted)">Organization</div><div style="font-weight:600;color:var(--text-title);margin-top:3px" id="profModalOrg">null</div></div>
+      <div class="sb"><div class="sn" style="font-size:11px;color:var(--text-muted)">Role Access</div><div style="font-weight:600;color:var(--text-title);margin-top:3px" id="profModalAccess">Full Platform (<span id="profModalRoleAccess">null</span>)</div></div>
       <div class="sb"><div class="sn" style="font-size:11px;color:var(--text-muted)">Session Mode</div><div style="font-weight:600;color:var(--brand);margin-top:3px">Interactive Demo</div></div>
       <div class="sb"><div class="sn" style="font-size:11px;color:var(--text-muted)">System Status</div><div style="font-weight:600;color:#10b981;margin-top:3px">● Online & Synced</div></div>
     </div>
@@ -1054,13 +1052,13 @@
 
 <script>
   // -------- INITIAL DATA --------
-  let pComb = {{ chart_combined_json | safe if chart_combined_json else '{}' }};
-  let pPm25 = {{ chart_pm25_json | safe if chart_pm25_json else '{}' }};
-  let pPm10 = {{ chart_pm10_json | safe if chart_pm10_json else '{}' }};
+  let pComb = null;
+  let pPm25 = null;
+  let pPm10 = null;
   let activeChart = 'combined';
   let latestReq = 0;
-  let curPm25 = {{ current_pm25 }};
-  let curElev = {{ elevated_hours_count }};
+  let curPm25 = null;
+  let curElev = null;
   const CCFG = {responsive:true,displayModeBar:false};
   const actLog = [];
 
@@ -1199,7 +1197,7 @@
   // -------- AI FACTORS --------
   function buildFactors() {
     const c = document.getElementById('aifac'); if (!c) return;
-    const wnd = {{ current_wind }}, hum = {{ current_humidity }}, pm = {{ current_pm25 }};
+    const wnd = null;
     const factors = [];
     if (pm > 30) factors.push({a:'↑',col:'var(--high)',t:'PM2.5 Elevated',d:`Current: ${pm} µg/m³`});
     if (wnd < 10) factors.push({a:'↓',col:'var(--brand-accent)',t:'Low Wind Speed',d:`${wnd} km/h — reduced dispersion`});
