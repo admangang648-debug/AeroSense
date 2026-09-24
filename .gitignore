@@ -1,13 +1,5 @@
-# Virtual Environment
 venv/
+.env
 __pycache__/
 *.pyc
-
-# Environment & Secrets
-.env
-.env.local
-
-# IDE & OS files
 .DS_Store
-.vscode/
-.idea/

@@ -261,11 +261,11 @@ def generate_location_dataset(
     return df
 
 
-def get_location_air_quality(lat: float, lon: float, city: str = "Location", country: str = "") -> dict:
+def get_location_air_quality(lat: float, lon: float, city: str = "Location", country: str = "", history_hours: int = 72) -> dict:
     """
     Central function returning the complete observation state for any coordinate.
     """
-    df_history = generate_location_dataset(lat, lon, city=city, country=country, history_hours=72)
+    df_history = generate_location_dataset(lat, lon, city=city, country=country, history_hours=history_hours)
     latest_row = df_history.iloc[-1]
 
     live_check = fetch_live_openaq_data(lat, lon)
