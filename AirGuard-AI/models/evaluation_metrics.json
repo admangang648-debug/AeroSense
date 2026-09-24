@@ -1,0 +1,50 @@
+{
+    "model_type": "RandomForestRegressor (Multi-target)",
+    "features_used": [
+        "temperature",
+        "humidity",
+        "wind_speed",
+        "pressure",
+        "rainfall",
+        "hour",
+        "dayofweek",
+        "is_weekend",
+        "month",
+        "hour_sin",
+        "hour_cos",
+        "PM2.5_lag_1",
+        "PM2.5_lag_2",
+        "PM2.5_lag_3",
+        "PM2.5_lag_6",
+        "PM2.5_lag_12",
+        "PM2.5_lag_24",
+        "PM10_lag_1",
+        "PM10_lag_2",
+        "PM10_lag_3",
+        "PM10_lag_6",
+        "PM10_lag_12",
+        "PM10_lag_24",
+        "PM2.5_rolling_mean_3",
+        "PM2.5_rolling_mean_6",
+        "PM2.5_rolling_mean_12",
+        "PM2.5_rolling_mean_24",
+        "PM10_rolling_mean_3",
+        "PM10_rolling_mean_6",
+        "PM10_rolling_mean_12",
+        "PM10_rolling_mean_24"
+    ],
+    "train_samples": 844,
+    "test_samples": 212,
+    "metrics": {
+        "PM2.5": {
+            "MAE": 4.925,
+            "RMSE": 6.585,
+            "R2": 0.8564
+        },
+        "PM10": {
+            "MAE": 10.269,
+            "RMSE": 13.933,
+            "R2": 0.8423
+        }
+    }
+}

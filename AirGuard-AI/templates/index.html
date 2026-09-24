@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroSense — Environmental Intelligence & Air Quality Forecasting</title>
+    <!-- Fonts: Inter (UI & Data) and Outfit (Headers) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Plotly.js for interactive analytics -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+    <style>
+        :root {
+            /* Clean Light Enterprise Palette */
+            --bg-page: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --bg-subtle: #F1F5F9;
+            --bg-elevated: #FFFFFF;
+            
+            --border-light: #E2E8F0;
+            --border-focus: #94A3B8;
+            
+            --text-title: #0F172A;
+            --text-body: #334155;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            
+            /* Restrained Brand Colors */
+            --brand-primary: #0F766E;      /* Deep Teal */
+            --brand-primary-light: #F0FDFA;
+            --brand-primary-border: #CCFBF1;
+            --brand-accent: #0284C7;       /* Precision Cyan/Blue */
+            
+            /* Standardized Environmental Risk Tones */
+            --risk-low: #059669;
+            --risk-low-bg: #ECFDF5;
+            --risk-low-border: #A7F3D0;
+            
+            --risk-moderate: #D97706;
+            --risk-moderate-bg: #FFFBEB;
+            --risk-moderate-border: #FDE68A;
+            
+            --risk-high: #EA580C;
+            --risk-high-bg: #FFF7ED;
+            --risk-high-border: #FED7AA;
+            
+            --risk-vhigh: #DC2626;
+            --risk-vhigh-bg: #FEF2F2;
+            --risk-vhigh-border: #FECACA;
+            
+            --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+            --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-md: 10px;
+            --radius-sm: 6px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 0 24px 60px 24px;
+        }
+
+        /* -------------------------------------------------------------
+           1. TOP NAVIGATION
+        ------------------------------------------------------------- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            margin: 18px 0 20px 0;
+            box-shadow: var(--shadow-subtle);
+            position: sticky;
+            top: 14px;
+            z-index: 50;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-brand-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-title);
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+        }
+
+        .nav-brand-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: color 0.15s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--brand-primary);
+        }
+
+        .nav-right-pills {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-source-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.4px;
+        }
+
+        .pill-demo {
+            background: var(--risk-moderate-bg);
+            color: var(--risk-moderate);
+            border: 1px solid var(--risk-moderate-border);
+        }
+
+        .pill-live {
+            background: var(--risk-low-bg);
+            color: var(--risk-low);
+            border: 1px solid var(--risk-low-border);
+        }
+
+        .system-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--risk-low);
+            background: var(--risk-low-bg);
+            border: 1px solid var(--risk-low-border);
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+
+        .pill-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--risk-low);
+            border-radius: 50%;
+        }
+
+        /* -------------------------------------------------------------
+           2. LOCATION BAR & HERO SECTION
+        ------------------------------------------------------------- */
+        .location-header-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .location-info-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .location-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .location-city-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .location-coords {
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: var(--bg-subtle);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-light);
+            font-family: monospace;
+        }
+
+        .btn-change-location {
+            background: var(--brand-primary-light);
+            color: var(--brand-primary);
+            border: 1px solid var(--brand-primary-border);
+            padding: 6px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-change-location:hover {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+        }
+
+        .hero-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .hero-title-area h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-title);
+            letter-spacing: -0.4px;
+            margin-bottom: 2px;
+        }
+
+        .hero-tagline {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: var(--brand-primary);
+            margin-bottom: 4px;
+        }
+
+        .hero-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .hero-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .meta-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .meta-box strong {
+            color: var(--text-title);
+            font-weight: 600;
+        }
+
+        .btn-refresh-clean {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--text-title);
+            color: #FFFFFF;
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+
+        .btn-refresh-clean:hover {
+            opacity: 0.92;
+        }
+
+        /* -------------------------------------------------------------
+           3. LOCATION MODAL & SELECTOR
+        ------------------------------------------------------------- */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-modal);
+            width: 100%;
+            max-width: 520px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 12px;
+        }
+
+        .modal-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-title);
+        }
+
+        .btn-close-modal {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .btn-close-modal:hover {
+            color: var(--text-title);
+        }
+
+        .modal-search-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .modal-input {
+            flex: 1;
+            padding: 9px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-title);
+            background: #FFFFFF;
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: var(--brand-accent);
+        }
+
+        .btn-modal-search {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-modal-search:hover {
+            opacity: 0.92;
+        }
+
+        .btn-use-gps {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--brand-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-use-gps:hover {
+            background: var(--brand-primary-light);
+            border-color: var(--brand-primary-border);
+        }
+
+        .modal-section-title {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .quick-cities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .city-chip-btn {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 12px;
+            color: var(--text-body);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .city-chip-btn:hover {
+            border-color: var(--brand-accent);
+            color: var(--brand-accent);
+            background: #F0F9FF;
+        }
+
+        .modal-message-box {
+            display: none;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .modal-message-box.error {
+            display: block;
+            background: var(--risk-vhigh-bg);
+            border: 1px solid var(--risk-vhigh-border);
+            color: var(--risk-vhigh);
+        }
+
+        .modal-message-box.success {
+            display: block;
+            background: var(--risk-low-bg);
+            border: 1px solid var(--risk-low-border);
+            color: var(--risk-low);
+        }
+
+        .modal-privacy-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-light);
+            padding-top: 12px;
+            line-height: 1.4;
+        }
+
+        /* -------------------------------------------------------------
+           4. EXECUTIVE AIR QUALITY SUMMARY (4 CARDS)
+        ------------------------------------------------------------- */
+        .section-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.2px;
+            margin: 24px 0 14px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metrics-quad-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-tile {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .metric-tile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .metric-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-icon-subtle {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--bg-subtle);
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-number-group {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .metric-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.5px;
+        }
+
+        .metric-unit-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+            width: fit-content;
+        }
+
+        .chip-low { background: var(--risk-low-bg); color: var(--risk-low); border: 1px solid var(--risk-low-border); }
+        .chip-moderate { background: var(--risk-moderate-bg); color: var(--risk-moderate); border: 1px solid var(--risk-moderate-border); }
+        .chip-high { background: var(--risk-high-bg); color: var(--risk-high); border: 1px solid var(--risk-high-border); }
+        .chip-vhigh { background: var(--risk-vhigh-bg); color: var(--risk-vhigh); border: 1px solid var(--risk-vhigh-border); }
+        .chip-neutral { background: var(--bg-subtle); color: var(--text-secondary); border: 1px solid var(--border-light); }
+
+        /* -------------------------------------------------------------
+           5. DUAL COLUMN: PRIMARY FORECAST & RISK INTELLIGENCE
+        ------------------------------------------------------------- */
+        .analytics-split-layout {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .panel-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 14px;
+        }
+
+        .panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-title);
+        }
+
+        .panel-subtitle {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+
+        .chart-toggle-group {
+            display: flex;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-sm);
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .btn-tab {
+            background: transparent;
+            border: none;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-tab.active {
+            background: #FFFFFF;
+            color: var(--text-title);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+
+        .plot-container {
+            width: 100%;
+            min-height: 380px;
+        }
+
+        /* Risk Intelligence Sidebar */
+        .risk-stat-row {
+            margin-bottom: 18px;
+        }
+
+        .risk-stat-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .risk-banner-box {
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 18px;
+        }
+
+        .risk-banner-box.risk-box-Low {
+            background: var(--risk-low-bg);
+            border: 1px solid var(--risk-low-border);
+            color: var(--risk-low);
+        }
+
+        .risk-banner-box.risk-box-Moderate {
+            background: var(--risk-moderate-bg);
+            border: 1px solid var(--risk-moderate-border);
+            color: var(--risk-moderate);
+        }
+
+        .risk-banner-box.risk-box-High {
+            background: var(--risk-high-bg);
+            border: 1px solid var(--risk-high-border);
+            color: var(--risk-high);
+        }
+
+        .risk-banner-box.risk-box-Very\ High {
+            background: var(--risk-vhigh-bg);
+            border: 1px solid var(--risk-vhigh-border);
+            color: var(--risk-vhigh);
+        }
+
+        .risk-status-word {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+        }
+
+        .stat-line-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 13px;
+        }
+
+        .stat-line-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-line-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-line-val {
+            font-weight: 600;
+            color: var(--text-title);
+        }
+
+        /* -------------------------------------------------------------
+           6. 24-HOUR HOURLY TABLE
+        ------------------------------------------------------------- */
+        .clean-table-scroll {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+
+        .clean-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+            text-align: left;
+        }
+
+        .clean-table th {
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        .clean-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-body);
+            white-space: nowrap;
+        }
+
+        .clean-table tr:hover td {
+            background: #F8FAFC;
+        }
+
+        /* -------------------------------------------------------------
+           7. PUBLIC HEALTH & INDUSTRIAL RESPONSE (2-COLUMN)
+        ------------------------------------------------------------- */
+        .advisory-twin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .checklist-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 11px 14px;
+            font-size: 13px;
+            color: var(--text-title);
+        }
+
+        .checklist-num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            background: var(--brand-primary-light);
+            border: 1px solid var(--brand-primary-border);
+            padding: 2px 6px;
+            border-radius: 4px;
+            line-height: 1.2;
+        }
+
+        .disclaimer-note {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            background: #F8FAFC;
+            border: 1px solid var(--border-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+
+        /* -------------------------------------------------------------
+           8. MODEL PERFORMANCE & PROACTIVE IMPACT
+        ------------------------------------------------------------- */
+        .stats-tri-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .metrics-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .metrics-data-table th {
+            text-align: left;
+            padding: 8px 10px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .metrics-data-table td {
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .impact-card-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .impact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+
+        .impact-label {
+            color: var(--text-secondary);
+        }
+
+        .impact-val {
+            font-weight: 600;
+            color: var(--text-title);
+        }
+
+        .impact-val.pending {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        /* -------------------------------------------------------------
+           9. REAL DATA ARCHITECTURE & TRANSPARENCY PIPELINE
+        ------------------------------------------------------------- */
+        .pipeline-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .pipeline-flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            overflow-x: auto;
+            padding: 16px 0 8px 0;
+            gap: 8px;
+        }
+
+        .pipeline-node {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-title);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .pipeline-node.active {
+            background: var(--brand-primary-light);
+            border-color: var(--brand-primary-border);
+            color: var(--brand-primary);
+        }
+
+        .pipeline-arrow {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        .source-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+        }
+
+        .source-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-title);
+            margin-bottom: 2px;
+        }
+
+        .source-detail {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+        }
+
+        /* -------------------------------------------------------------
+           10. FOOTER
+        ------------------------------------------------------------- */
+        footer {
+            border-top: 1px solid var(--border-light);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--text-title);
+        }
+
+        /* -------------------------------------------------------------
+           RESPONSIVE BREAKPOINTS
+        ------------------------------------------------------------- */
+        @media (max-width: 1040px) {
+            .metrics-quad-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .analytics-split-layout, .advisory-twin-grid, .stats-tri-grid, .source-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .top-nav {
+                flex-direction: column;
+                gap: 12px;
+                padding: 14px;
+                align-items: flex-start;
+            }
+            .location-header-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-menu {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            .hero-banner {
+                padding: 18px;
+            }
+            .metrics-quad-grid {
+                grid-template-columns: 1fr;
+            }
+            .quick-cities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- ==============================================================
+         1. TOP NAVIGATION
+    ============================================================== -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <div class="nav-brand-mark">A</div>
+            <div>
+                <div class="nav-brand-title">AeroSense</div>
+                <div class="nav-brand-sub">Environmental Intelligence Platform</div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#overview">Overview</a>
+            <a href="#forecast">Forecast</a>
+            <a href="#alerts">Alerts</a>
+            <a href="#insights">Insights</a>
+        </nav>
+
+        <div class="nav-right-pills">
+            <span id="data-source-badge" class="data-source-pill {% if is_live %}pill-live{% else %}pill-demo{% endif %}">
+                ● {% if is_live %}LIVE DATA (OpenAQ){% else %}DEMO DATA (Synthetic){% endif %}
+            </span>
+            <div class="system-pill">
+                <span class="pill-dot"></span>
+                SYSTEM ONLINE
+            </div>
+        </div>
+    </header>
+
+    <!-- ==============================================================
+         2. DYNAMIC LOCATION HEADER BAR
+    ============================================================== -->
+    <div class="location-header-bar">
+        <div class="location-info-group">
+            <span class="location-label">📍 Current Location:</span>
+            <span class="location-city-name" id="display-location-name">
+                {{ current_location.display_name if current_location.display_name else current_location.city }}
+            </span>
+            <span class="location-coords" id="display-location-coords">
+                {{ current_location.coordinates_display if current_location.coordinates_display else "12.9716° N, 77.5946° E" }}
+            </span>
+            <span class="status-chip chip-low" id="location-sync-status" style="font-size: 10.5px;">
+                ● Active Monitor Session
+            </span>
+        </div>
+
+        <div>
+            <button class="btn-change-location" onclick="openLocationModal()">
+                <span>✏️</span> Change Location
+            </button>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         3. HERO / PLATFORM SUMMARY
+    ============================================================== -->
+    <section id="overview" class="hero-banner">
+        <div class="hero-title-area">
+            <h2>AeroSense</h2>
+            <p class="hero-tagline">"Predict pollution before it becomes a public health risk."</p>
+            <p class="hero-desc">24-hour AI forecasting for PM2.5 and PM10 using environmental and weather data.</p>
+        </div>
+
+        <div class="hero-meta-row">
+            <div class="meta-box">📍 City: <strong id="hero-city-tag">{{ current_location.city }}</strong></div>
+            <div class="meta-box">🕒 Last Updated: <strong id="hero-timestamp">{{ latest_timestamp }}</strong></div>
+            <div class="meta-box">⏱️ Horizon: <strong>24 Hours</strong></div>
+            <button class="btn-refresh-clean" id="refresh-action-btn" onclick="triggerRefresh()">
+                <span>🔄</span> Refresh Forecast
+            </button>
+        </div>
+    </section>
+
+    <!-- ==============================================================
+         4. EXECUTIVE AIR QUALITY OVERVIEW (4 METRIC TILES)
+    ============================================================== -->
+    <div class="section-heading">
+        <span>Air Quality Overview</span>
+    </div>
+
+    <div class="metrics-quad-grid">
+        <!-- PM2.5 Card -->
+        <div class="metric-tile">
+            <div class="metric-tile-header">
+                <span class="metric-title">PM2.5 (Fine Particles)</span>
+                <div class="metric-icon-subtle">PM</div>
+            </div>
+            <div class="metric-number-group">
+                <span class="metric-number" id="val-pm25">{{ current_pm25 }}</span>
+                <span class="metric-unit-text">µg/m³</span>
+            </div>
+            <div>
+                <span id="chip-pm25" class="status-chip {% if current_pm25 <= 30 %}chip-low{% elif current_pm25 <= 60 %}chip-moderate{% elif current_pm25 <= 90 %}chip-high{% else %}chip-vhigh{% endif %}">
+                    ● Risk: {% if current_pm25 <= 30 %}LOW{% elif current_pm25 <= 60 %}MODERATE{% elif current_pm25 <= 90 %}HIGH{% else %}VERY HIGH{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- PM10 Card -->
+        <div class="metric-tile">
+            <div class="metric-tile-header">
+                <span class="metric-title">PM10 (Coarse Particles)</span>
+                <div class="metric-icon-subtle">PM</div>
+            </div>
+            <div class="metric-number-group">
+                <span class="metric-number" id="val-pm10">{{ current_pm10 }}</span>
+                <span class="metric-unit-text">µg/m³</span>
+            </div>
+            <div>
+                <span id="chip-pm10" class="status-chip {% if current_pm10 <= 50 %}chip-low{% elif current_pm10 <= 100 %}chip-moderate{% elif current_pm10 <= 250 %}chip-high{% else %}chip-vhigh{% endif %}">
+                    ● Risk: {% if current_pm10 <= 50 %}LOW{% elif current_pm10 <= 100 %}MODERATE{% elif current_pm10 <= 250 %}HIGH{% else %}VERY HIGH{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Temperature Card -->
+        <div class="metric-tile">
+            <div class="metric-tile-header">
+                <span class="metric-title">Temperature</span>
+                <div class="metric-icon-subtle">°C</div>
+            </div>
+            <div class="metric-number-group">
+                <span class="metric-number" id="val-temp">{{ current_temp }}</span>
+                <span class="metric-unit-text">°C</span>
+            </div>
+            <div>
+                <span class="status-chip chip-neutral">
+                    Ambient Observation
+                </span>
+            </div>
+        </div>
+
+        <!-- Humidity Card -->
+        <div class="metric-tile">
+            <div class="metric-tile-header">
+                <span class="metric-title">Relative Humidity</span>
+                <div class="metric-icon-subtle">%</div>
+            </div>
+            <div class="metric-number-group">
+                <span class="metric-number" id="val-humidity">{{ current_humidity }}</span>
+                <span class="metric-unit-text">%</span>
+            </div>
+            <div>
+                <span class="status-chip chip-neutral">
+                    Atmospheric Moisture
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         5. PRIMARY FORECAST PANEL & RISK INTELLIGENCE PANEL
+    ============================================================== -->
+    <div id="forecast" class="analytics-split-layout">
+        <!-- Main Forecast Chart Panel -->
+        <div class="card-panel">
+            <div class="panel-header-row">
+                <div>
+                    <h3 class="panel-title">24-Hour Pollution Forecast</h3>
+                    <p class="panel-subtitle">Predicted PM2.5 and PM10 concentration for <strong id="chart-city-label">{{ current_location.city }}</strong></p>
+                </div>
+                <div class="chart-toggle-group">
+                    <button class="btn-tab active" id="tab-combined" onclick="selectChartMode('combined')">Multi-Pollutant</button>
+                    <button class="btn-tab" id="tab-pm25" onclick="selectChartMode('pm25')">PM2.5</button>
+                    <button class="btn-tab" id="tab-pm10" onclick="selectChartMode('pm10')">PM10</button>
+                </div>
+            </div>
+
+            <div id="plotly-forecast-element" class="plot-container"></div>
+
+            <!-- Tabular Breakdown -->
+            <div class="clean-table-scroll">
+                <table class="clean-table">
+                    <thead>
+                        <tr>
+                            <th>Horizon</th>
+                            <th>Forecast Timestamp</th>
+                            <th>Predicted PM2.5 (µg/m³)</th>
+                            <th>Predicted PM10 (µg/m³)</th>
+                            <th>Est. Temp (°C)</th>
+                            <th>Est. Humidity (%)</th>
+                            <th>Risk Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forecast-table-body">
+                        {% for item in forecast_records %}
+                        <tr>
+                            <td><strong>+{{ item.forecast_hour }}h</strong></td>
+                            <td>{{ item.timestamp }}</td>
+                            <td style="font-weight: 600; color: #0284C7;">{{ item['predicted_PM2.5'] }}</td>
+                            <td style="font-weight: 600; color: #7C3AED;">{{ item['predicted_PM10'] }}</td>
+                            <td>{{ item.temperature }}°C</td>
+                            <td>{{ item.humidity }}%</td>
+                            <td>
+                                <span class="status-chip {% if item.aqi_category == 'Good' %}chip-low{% elif item.aqi_category == 'Satisfactory / Moderate' %}chip-moderate{% elif 'Sensitive' in item.aqi_category %}chip-high{% else %}chip-vhigh{% endif %}">
+                                    {{ item.aqi_category }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Risk Intelligence Panel -->
+        <div class="card-panel">
+            <div class="panel-header-row">
+                <div>
+                    <h3 class="panel-title">Air Quality Risk</h3>
+                    <p class="panel-subtitle">Forecasted Risk State</p>
+                </div>
+            </div>
+
+            <div class="risk-stat-row">
+                <div class="risk-stat-label">Current Risk Level</div>
+                <div id="risk-banner-box" class="risk-banner-box risk-box-{{ current_alert.risk_category }}">
+                    <div class="risk-status-word" id="risk-status-word">{{ current_alert.risk_category | upper }}</div>
+                    <div style="font-size: 12px; margin-top: 4px; line-height: 1.4;" id="risk-health-summary">
+                        {{ current_alert.public_health_message }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-line-item">
+                <span class="stat-line-label">Expected Peak Time</span>
+                <span class="stat-line-val" id="stat-peak-time">{{ forecast_summary.peak_pollution_event.timestamp if forecast_summary.peak_pollution_event.timestamp else "N/A" }}</span>
+            </div>
+
+            <div class="stat-line-item">
+                <span class="stat-line-label">Peak PM2.5</span>
+                <span class="stat-line-val" id="stat-peak-pm25" style="color: #0284C7;">{{ forecast_summary.peak_pollution_event['peak_PM2.5'] }} µg/m³</span>
+            </div>
+
+            <div class="stat-line-item">
+                <span class="stat-line-label">Peak PM10</span>
+                <span class="stat-line-val" id="stat-peak-pm10" style="color: #7C3AED;">{{ forecast_summary.peak_pollution_event['peak_PM10'] }} µg/m³</span>
+            </div>
+
+            <div class="stat-line-item">
+                <span class="stat-line-label">Elevated Risk Hours</span>
+                <span class="stat-line-val" id="stat-elevated-hours" style="color: var(--risk-moderate);">{{ elevated_hours_count }} hrs</span>
+            </div>
+
+            <div class="disclaimer-note" style="margin-top: 16px;">
+                <strong>Early Detection:</strong> AeroSense identifies periods when pollution is expected to increase so preventive action can be considered before the peak.
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         6. PUBLIC HEALTH INTELLIGENCE & INDUSTRIAL RESPONSE
+    ============================================================== -->
+    <div id="alerts" class="advisory-twin-grid">
+        <!-- Public Health Advisory -->
+        <div class="card-panel">
+            <div class="panel-header-row">
+                <div>
+                    <h3 class="panel-title">Public Health Advisory</h3>
+                    <p class="panel-subtitle">Citizen protection and exposure guidance</p>
+                </div>
+                <span id="chip-advisory-level" class="status-chip {% if current_alert.risk_category == 'Low' %}chip-low{% elif current_alert.risk_category == 'Moderate' %}chip-moderate{% elif current_alert.risk_category == 'High' %}chip-high{% else %}chip-vhigh{% endif %}">
+                    Level: {{ current_alert.risk_category | upper }}
+                </span>
+            </div>
+
+            <div style="font-size: 13.5px; color: var(--text-title); font-weight: 600; margin-bottom: 6px;">
+                Health Impact:
+            </div>
+            <p id="advisory-description" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+                {{ current_alert.description }}
+            </p>
+
+            <div style="font-size: 13.5px; color: var(--text-title); font-weight: 600; margin-bottom: 8px;">
+                Recommended Public Action:
+            </div>
+            <div class="checklist-container" id="public-actions-list">
+                {% for action in current_alert.recommended_public_actions %}
+                <div class="checklist-item">
+                    <span class="checklist-num">0{{ loop.index }}</span>
+                    <span>{{ action }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="disclaimer-note">
+                Advisory generated from the forecasting model. It is not a substitute for official public-health guidance.
+            </div>
+        </div>
+
+        <!-- Industrial Emission Response -->
+        <div class="card-panel">
+            <div class="panel-header-row">
+                <div>
+                    <h3 class="panel-title">Industrial Emission Response</h3>
+                    <p class="panel-subtitle">Recommended preventive actions during forecast pollution peaks.</p>
+                </div>
+            </div>
+
+            <div class="checklist-container" id="industrial-actions-list" style="margin-top: 6px;">
+                {% for action in forecast_summary.key_industrial_actions %}
+                <div class="checklist-item">
+                    <span class="checklist-num">0{{ loop.index }}</span>
+                    <span>{{ action }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="disclaimer-note" style="margin-top: 18px;">
+                <strong>AI-Generated Advisory:</strong> Not an official regulatory order. Designed for voluntary operational emission reduction during predicted peak atmospheric stagnation.
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         7. MODEL PERFORMANCE & PROACTIVE IMPACT
+    ============================================================== -->
+    <div id="insights" class="stats-tri-grid">
+        <!-- Forecast Model Performance -->
+        <div class="card-panel">
+            <div class="panel-header-row">
+                <div>
+                    <h3 class="panel-title">Forecast Model Performance</h3>
+                    <p class="panel-subtitle">Statistical accuracy across test partition</p>
+                </div>
+                <span class="status-chip chip-low">
+                    Model: Trained / Available
+                </span>
+            </div>
+
+            <table class="metrics-data-table">
+                <thead>
+                    <tr>
+                        <th>Target Target</th>
+                        <th>MAE (Mean Absolute Error)</th>
+                        <th>RMSE (Root Mean Sq. Error)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PM2.5</strong></td>
+                        <td><strong>{{ metrics_data.metrics['PM2.5'].MAE }}</strong> µg/m³</td>
+                        <td><strong>{{ metrics_data.metrics['PM2.5'].RMSE }}</strong> µg/m³</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PM10</strong></td>
+                        <td><strong>{{ metrics_data.metrics['PM10'].MAE }}</strong> µg/m³</td>
+                        <td><strong>{{ metrics_data.metrics['PM10'].RMSE }}</strong> µg/m³</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Forecast Horizon</strong></td>
+                        <td colspan="2"><strong style="color: var(--brand-primary);">24 Hours</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="disclaimer-note" style="margin-top: 14px;">
+                Metrics are calculated from the model's test evaluation. Lower error values indicate closer agreement between predictions and observed test data.
+            </div>
+        </div>
+
+        <!-- Proactive Impact -->
+        <div class="card-panel">
+            <div class="panel-header-row">
+                <div>
+                    <h3 class="panel-title">Proactive Impact</h3>
+                    <p class="panel-subtitle">Operational intelligence indicators</p>
+                </div>
+            </div>
+
+            <div class="impact-card-stack">
+                <div class="impact-item">
+                    <span class="impact-label">Peak Exposure Hours Identified</span>
+                    <span class="impact-val" id="impact-peak-time">{{ forecast_summary.peak_pollution_event.timestamp if forecast_summary.peak_pollution_event.timestamp else "N/A" }}</span>
+                </div>
+
+                <div class="impact-item">
+                    <span class="impact-label">Forecast Lead Time</span>
+                    <span class="impact-val" style="color: var(--brand-primary);">24 Hours</span>
+                </div>
+
+                <div class="impact-item">
+                    <span class="impact-label">Elevated-Risk Periods Detected</span>
+                    <span class="impact-val" id="impact-elevated-hours" style="color: var(--risk-moderate);">{{ elevated_hours_count }} Hours</span>
+                </div>
+
+                <div class="impact-item">
+                    <span class="impact-label">Live City Sensor Telemetry</span>
+                    <span class="impact-val pending">Available after live monitoring integration</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         8. REAL DATA ARCHITECTURE & TRANSPARENCY PIPELINE
+    ============================================================== -->
+    <div class="pipeline-card">
+        <h3 class="panel-title" style="margin-bottom: 2px;">Real-Time Data Integration Pipeline</h3>
+        <p class="panel-subtitle">End-to-end data flow schema engineered for OpenAQ & AirNow live integration</p>
+
+        <div class="pipeline-flow-row">
+            <div class="pipeline-node active">User Location (GPS / City)</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node active">Latitude + Longitude</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node">Air Quality Data API (OpenAQ)</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node active">PM2.5 / PM10 Stream</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node active">Forecast Model (RF)</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node active">Risk Analysis</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node active">Public Health Alert</div>
+        </div>
+
+        <div class="source-grid">
+            <div class="source-box">
+                <div class="source-title">OpenAQ API</div>
+                <div class="source-detail">Global open-source ambient air quality observation schema reference.</div>
+            </div>
+
+            <div class="source-box">
+                <div class="source-title">US EPA AirNow</div>
+                <div class="source-detail">Regulatory ambient air quality standards and public health warning benchmarks.</div>
+            </div>
+
+            <div class="source-box" style="background: #FFFBEB; border-color: #FDE68A;">
+                <div class="source-title" style="color: #92400E;">Demo Forecast Baseline</div>
+                <div class="source-detail" style="color: #78350F;">
+                    <strong>Demo forecast — synthetic dataset:</strong> Atmospheric physics baseline dataset active for demonstration.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         9. FOOTER
+    ============================================================== -->
+    <footer>
+        <div>
+            <span class="footer-brand">AeroSense</span> • <em>"Predict. Alert. Act."</em> • PS-1A | Climate & Environment
+        </div>
+        <div>
+            Model: <strong>Random Forest Regressor</strong> | Data: <strong>Synthetic Demo</strong> | Version: <strong>v1.0 (Hackathon Prototype)</strong>
+        </div>
+    </footer>
+
+</div>
+
+<!-- ==============================================================
+     LOCATION SELECTION MODAL
+============================================================== -->
+<div id="location-modal-backdrop" class="modal-backdrop" onclick="handleBackdropClick(event)">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title">📍 Select Location</div>
+            <button class="btn-close-modal" onclick="closeLocationModal()">&times;</button>
+        </div>
+
+        <!-- Feedback message container -->
+        <div id="modal-feedback" class="modal-message-box"></div>
+
+        <!-- 1. Use My Location Button -->
+        <button class="btn-use-gps" id="btn-gps" onclick="handleUseMyLocation()">
+            <span>🧭</span> Use My Location (Browser GPS)
+        </button>
+
+        <!-- 2. Search City Input -->
+        <div class="modal-section-title">Or Search City / Location</div>
+        <form class="modal-search-row" onsubmit="handleCitySearch(event)">
+            <input type="text" id="city-search-input" class="modal-input" placeholder="Search city or location (e.g., Bengaluru, Mumbai, Delhi, New York)..." autocomplete="off" />
+            <button type="submit" class="btn-modal-search" id="btn-search">Search</button>
+        </form>
+
+        <!-- 3. Quick Common Cities Dropdown / Chips -->
+        <div class="modal-section-title">Popular Demo Cities</div>
+        <div class="quick-cities-grid">
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('Bengaluru')">Bengaluru</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('Mumbai')">Mumbai</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('Delhi')">Delhi</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('Hyderabad')">Hyderabad</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('Chennai')">Chennai</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('New York')">New York</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('London')">London</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('San Francisco')">San Francisco</button>
+            <button type="button" class="city-chip-btn" onclick="selectQuickCity('Tokyo')">Tokyo</button>
+        </div>
+
+        <!-- Privacy Assurance -->
+        <div class="modal-privacy-note">
+            🔒 <strong>Privacy Assurance:</strong> AeroSense does not permanently store precise user location. Coordinates are utilized strictly for the active session forecast request.
+        </div>
+    </div>
+</div>
+
+<!-- ==============================================================
+     JAVASCRIPT LOGIC
+============================================================== -->
+<script>
+    // Active chart objects in memory
+    let plotCombined = {{ chart_combined_json | safe if chart_combined_json else '{}' }};
+    let plotPm25 = {{ chart_pm25_json | safe if chart_pm25_json else '{}' }};
+    let plotPm10 = {{ chart_pm10_json | safe if chart_pm10_json else '{}' }};
+    let activeChartMode = 'combined';
+
+    // Anti-stale request tracking
+    let latestRequestTimestamp = 0;
+
+    const plotConfiguration = {
+        responsive: true,
+        displayModeBar: false
+    };
+
+    function drawChart(figureObj) {
+        if (figureObj && figureObj.data) {
+            Plotly.newPlot('plotly-forecast-element', figureObj.data, figureObj.layout, plotConfiguration);
+        }
+    }
+
+    // Initial render
+    drawChart(plotCombined);
+
+    // Chart toggle switcher
+    function selectChartMode(mode) {
+        activeChartMode = mode;
+        const tabs = document.querySelectorAll('.btn-tab');
+        tabs.forEach(t => t.classList.remove('active'));
+
+        const targetTab = document.getElementById('tab-' + mode);
+        if (targetTab) targetTab.classList.add('active');
+
+        if (mode === 'combined') {
+            drawChart(plotCombined);
+        } else if (mode === 'pm25') {
+            drawChart(plotPm25);
+        } else if (mode === 'pm10') {
+            drawChart(plotPm10);
+        }
+    }
+
+    // Modal display controls
+    function openLocationModal() {
+        document.getElementById('location-modal-backdrop').classList.add('active');
+        clearModalFeedback();
+    }
+
+    function closeLocationModal() {
+        document.getElementById('location-modal-backdrop').classList.remove('active');
+    }
+
+    function handleBackdropClick(e) {
+        if (e.target.id === 'location-modal-backdrop') {
+            closeLocationModal();
+        }
+    }
+
+    function showModalFeedback(msg, isError = true) {
+        const box = document.getElementById('modal-feedback');
+        box.textContent = msg;
+        box.className = isError ? 'modal-message-box error' : 'modal-message-box success';
+    }
+
+    function clearModalFeedback() {
+        const box = document.getElementById('modal-feedback');
+        box.textContent = '';
+        box.className = 'modal-message-box';
+    }
+
+    // Helper: Risk Chip Class
+    function getRiskChipClass(val, isPm25 = true) {
+        const v = parseFloat(val);
+        if (isPm25) {
+            if (v <= 30) return 'chip-low';
+            if (v <= 60) return 'chip-moderate';
+            if (v <= 90) return 'chip-high';
+            return 'chip-vhigh';
+        } else {
+            if (v <= 50) return 'chip-low';
+            if (v <= 100) return 'chip-moderate';
+            if (v <= 250) return 'chip-high';
+            return 'chip-vhigh';
+        }
+    }
+
+    function getRiskWord(val, isPm25 = true) {
+        const v = parseFloat(val);
+        if (isPm25) {
+            if (v <= 30) return 'LOW';
+            if (v <= 60) return 'MODERATE';
+            if (v <= 90) return 'HIGH';
+            return 'VERY HIGH';
+        } else {
+            if (v <= 50) return 'LOW';
+            if (v <= 100) return 'MODERATE';
+            if (v <= 250) return 'HIGH';
+            return 'VERY HIGH';
+        }
+    }
+
+    // Central Function: Updates all dashboard DOM elements from full payload
+    function updateDashboardDOM(payload) {
+        if (!payload) return;
+
+        const loc = payload.location || payload.current_location;
+        const alertObj = payload.current_alert;
+        const summary = payload.forecast_summary;
+
+        // 1. Location Header
+        document.getElementById('display-location-name').textContent = loc.display_name || loc.city;
+        document.getElementById('display-location-coords').textContent = loc.coordinates_display || `${loc.latitude}°, ${loc.longitude}°`;
+        document.getElementById('hero-city-tag').textContent = loc.city;
+        document.getElementById('chart-city-label').textContent = loc.city;
+        document.getElementById('hero-timestamp').textContent = payload.latest_timestamp;
+
+        // 2. Data Mode Pill
+        const sourceBadge = document.getElementById('data-source-badge');
+        if (sourceBadge) {
+            if (payload.is_live) {
+                sourceBadge.className = 'data-source-pill pill-live';
+                sourceBadge.textContent = '● LIVE DATA (OpenAQ)';
+            } else {
+                sourceBadge.className = 'data-source-pill pill-demo';
+                sourceBadge.textContent = '● DEMO DATA (Synthetic)';
+            }
+        }
+
+        // 3. Four Metric Tiles
+        document.getElementById('val-pm25').textContent = payload.current_pm25;
+        document.getElementById('val-pm10').textContent = payload.current_pm10;
+        document.getElementById('val-temp').textContent = payload.current_temp;
+        document.getElementById('val-humidity').textContent = payload.current_humidity;
+
+        const chipPm25 = document.getElementById('chip-pm25');
+        chipPm25.className = `status-chip ${getRiskChipClass(payload.current_pm25, true)}`;
+        chipPm25.textContent = `● Risk: ${getRiskWord(payload.current_pm25, true)}`;
+
+        const chipPm10 = document.getElementById('chip-pm10');
+        chipPm10.className = `status-chip ${getRiskChipClass(payload.current_pm10, false)}`;
+        chipPm10.textContent = `● Risk: ${getRiskWord(payload.current_pm10, false)}`;
+
+        // 4. Risk Intelligence Panel
+        const riskCategory = alertObj.risk_category;
+        const riskBox = document.getElementById('risk-banner-box');
+        riskBox.className = `risk-banner-box risk-box-${riskCategory}`;
+        document.getElementById('risk-status-word').textContent = riskCategory.toUpperCase();
+        document.getElementById('risk-health-summary').textContent = alertObj.public_health_message;
+
+        const peakEvt = summary.peak_pollution_event || {};
+        document.getElementById('stat-peak-time').textContent = peakEvt.timestamp || 'N/A';
+        document.getElementById('stat-peak-pm25').textContent = `${peakEvt['peak_PM2.5'] || peakEvt.peak_pm25} µg/m³`;
+        document.getElementById('stat-peak-pm10').textContent = `${peakEvt['peak_PM10'] || peakEvt.peak_pm10} µg/m³`;
+        document.getElementById('stat-elevated-hours').textContent = `${payload.elevated_hours_count} hrs`;
+
+        // 5. Public Health Advisory Section
+        const advisoryChip = document.getElementById('chip-advisory-level');
+        advisoryChip.className = `status-chip ${getRiskChipClass(payload.current_pm25, true)}`;
+        advisoryChip.textContent = `Level: ${riskCategory.toUpperCase()}`;
+        document.getElementById('advisory-description').textContent = alertObj.description;
+
+        const publicList = document.getElementById('public-actions-list');
+        publicList.innerHTML = '';
+        (alertObj.recommended_public_actions || []).forEach((action, idx) => {
+            const item = document.createElement('div');
+            item.className = 'checklist-item';
+            item.innerHTML = `<span class="checklist-num">0${idx + 1}</span><span>${action}</span>`;
+            publicList.appendChild(item);
+        });
+
+        // 6. Industrial Emission Response Checklist
+        const indList = document.getElementById('industrial-actions-list');
+        indList.innerHTML = '';
+        (summary.key_industrial_actions || []).forEach((action, idx) => {
+            const item = document.createElement('div');
+            item.className = 'checklist-item';
+            item.innerHTML = `<span class="checklist-num">0${idx + 1}</span><span>${action}</span>`;
+            indList.appendChild(item);
+        });
+
+        // 7. Impact Indicators
+        document.getElementById('impact-peak-time').textContent = peakEvt.timestamp || 'N/A';
+        document.getElementById('impact-elevated-hours').textContent = `${payload.elevated_hours_count} Hours`;
+
+        // 8. 24-Hour Forecast Table
+        const tableBody = document.getElementById('forecast-table-body');
+        tableBody.innerHTML = '';
+        (payload.forecast_records || []).forEach(row => {
+            const tr = document.createElement('tr');
+            let chipClass = 'chip-low';
+            if (row.aqi_category === 'Satisfactory / Moderate') chipClass = 'chip-moderate';
+            else if (row.aqi_category && row.aqi_category.includes('Sensitive')) chipClass = 'chip-high';
+            else if (row.aqi_category && (row.aqi_category.includes('Poor') || row.aqi_category.includes('Severe'))) chipClass = 'chip-vhigh';
+
+            tr.innerHTML = `
+                <td><strong>+${row.forecast_hour}h</strong></td>
+                <td>${row.timestamp}</td>
+                <td style="font-weight: 600; color: #0284C7;">${row['predicted_PM2.5']}</td>
+                <td style="font-weight: 600; color: #7C3AED;">${row['predicted_PM10']}</td>
+                <td>${row.temperature}°C</td>
+                <td>${row.humidity}%</td>
+                <td>
+                    <span class="status-chip ${chipClass}">
+                        ${row.aqi_category}
+                    </span>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        // 9. Update Plotly Charts
+        try {
+            plotCombined = typeof payload.chart_combined_json === 'string' ? JSON.parse(payload.chart_combined_json) : payload.chart_combined_json;
+            plotPm25 = typeof payload.chart_pm25_json === 'string' ? JSON.parse(payload.chart_pm25_json) : payload.chart_pm25_json;
+            plotPm10 = typeof payload.chart_pm10_json === 'string' ? JSON.parse(payload.chart_pm10_json) : payload.chart_pm10_json;
+
+            selectChartMode(activeChartMode);
+        } catch (err) {
+            console.error('Error updating charts:', err);
+        }
+    }
+
+    // FEATURE 1: Use My Location (Browser Geolocation)
+    function handleUseMyLocation() {
+        clearModalFeedback();
+        const btnGps = document.getElementById('btn-gps');
+
+        if (!navigator.geolocation) {
+            showModalFeedback('Location services are unavailable. Search for a city instead.', true);
+            return;
+        }
+
+        btnGps.innerHTML = '<span>⏳</span> Locating position...';
+        btnGps.disabled = true;
+
+        const reqTime = Date.now();
+        latestRequestTimestamp = reqTime;
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                try {
+                    const res = await fetch('/api/location', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ latitude: lat, longitude: lon })
+                    });
+
+                    const data = await res.json();
+                    if (reqTime < latestRequestTimestamp) return; // Discard stale response
+
+                    if (res.ok && data.status === 'success') {
+                        showModalFeedback('Location detected: ' + data.location.display_name, false);
+                        updateDashboardDOM(data.dashboard_data);
+                        setTimeout(() => {
+                            closeLocationModal();
+                        }, 500);
+                    } else {
+                        showModalFeedback(data.message || 'Could not resolve location. Search for a city instead.', true);
+                    }
+                } catch (err) {
+                    showModalFeedback('Network error while updating location. Try searching for a city.', true);
+                } finally {
+                    btnGps.innerHTML = '<span>🧭</span> Use My Location (Browser GPS)';
+                    btnGps.disabled = false;
+                }
+            },
+            (error) => {
+                btnGps.innerHTML = '<span>🧭</span> Use My Location (Browser GPS)';
+                btnGps.disabled = false;
+
+                if (error.code === error.PERMISSION_DENIED) {
+                    showModalFeedback('Location permission was denied. Search for a city instead.', true);
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    showModalFeedback('Location services are unavailable. Search for a city instead.', true);
+                } else {
+                    showModalFeedback('Location timeout or error. Search for a city instead.', true);
+                }
+            },
+            { timeout: 8000, enableHighAccuracy: true }
+        );
+    }
+
+    // FEATURE 2: Search City Input
+    async function handleCitySearch(event) {
+        event.preventDefault();
+        clearModalFeedback();
+
+        const input = document.getElementById('city-search-input');
+        const query = input.value.trim();
+        if (!query) {
+            showModalFeedback('Please enter a city name to search.', true);
+            return;
+        }
+
+        const btnSearch = document.getElementById('btn-search');
+        btnSearch.innerHTML = 'Searching...';
+        btnSearch.disabled = true;
+
+        const reqTime = Date.now();
+        latestRequestTimestamp = reqTime;
+
+        try {
+            const res = await fetch('/api/location', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ city: query })
+            });
+
+            const data = await res.json();
+            if (reqTime < latestRequestTimestamp) return; // Discard stale response
+
+            if (res.ok && data.status === 'success') {
+                showModalFeedback('Selected: ' + data.location.display_name, false);
+                updateDashboardDOM(data.dashboard_data);
+                input.value = '';
+                setTimeout(() => {
+                    closeLocationModal();
+                }, 500);
+            } else {
+                showModalFeedback('Location not found. Try another city.', true);
+            }
+        } catch (err) {
+            showModalFeedback('Network error resolving location. Try another city.', true);
+        } finally {
+            btnSearch.innerHTML = 'Search';
+            btnSearch.disabled = false;
+        }
+    }
+
+    // FEATURE 3: Quick Select Popular Demo City
+    async function selectQuickCity(cityName) {
+        clearModalFeedback();
+        const reqTime = Date.now();
+        latestRequestTimestamp = reqTime;
+
+        try {
+            const res = await fetch('/api/location', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ city: cityName })
+            });
+
+            const data = await res.json();
+            if (reqTime < latestRequestTimestamp) return; // Discard stale response
+
+            if (res.ok && data.status === 'success') {
+                showModalFeedback('Selected: ' + data.location.display_name, false);
+                updateDashboardDOM(data.dashboard_data);
+                setTimeout(() => {
+                    closeLocationModal();
+                }, 450);
+            } else {
+                showModalFeedback('Location not found. Try another city.', true);
+            }
+        } catch (err) {
+            showModalFeedback('Error updating location.', true);
+        }
+    }
+
+    // Refresh action
+    async function triggerRefresh() {
+        const btn = document.getElementById('refresh-action-btn');
+        btn.innerHTML = '<span>⏳</span> Refreshing...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('/api/dashboard-data');
+            if (res.ok) {
+                const data = await res.json();
+                updateDashboardDOM(data);
+                btn.innerHTML = '<span>✓</span> Refreshed';
+                setTimeout(() => {
+                    btn.innerHTML = '<span>🔄</span> Refresh Forecast';
+                    btn.disabled = false;
+                }, 800);
+            } else {
+                btn.innerHTML = '<span>⚠️</span> Error';
+                setTimeout(() => {
+                    btn.innerHTML = '<span>🔄</span> Refresh Forecast';
+                    btn.disabled = false;
+                }, 1200);
+            }
+        } catch (e) {
+            console.error('Refresh request failed:', e);
+            btn.innerHTML = '<span>⚠️</span> Network Error';
+            setTimeout(() => {
+                btn.innerHTML = '<span>🔄</span> Refresh Forecast';
+                btn.disabled = false;
+            }, 1200);
+        }
+    }
+</script>
+
+</body>
+</html>

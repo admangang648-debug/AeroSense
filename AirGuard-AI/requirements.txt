@@ -1,0 +1,12 @@
+# Web Framework
+Flask>=3.0.0
+
+# Data Processing & Numerical Computation
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Machine Learning & Modeling
+scikit-learn>=1.3.0
+
+# Interactive Data Visualization
+plotly>=5.18.0
